@@ -3,11 +3,13 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
+const mongoose  = require('mongoose');
 const app = express();
+const getBooks = require('./modules/handler');
 app.use(cors());
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
+mongoose.connect('mongodb://localhost:27017/books-database', {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.get('/test', (request, response) => {
 
@@ -15,4 +17,7 @@ app.get('/test', (request, response) => {
 
 })
 
+app.get('/books', getBooks);
+
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
+
