@@ -9,7 +9,7 @@ const getBooks = require('./modules/handler');
 app.use(cors());
 
 const PORT = process.env.PORT || 3002;
-mongoose.connect('mongodb://localhost:27017/books-database', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.MONGOCONNECTION, {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.get('/test', (request, response) => {
 
