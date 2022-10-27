@@ -1,9 +1,10 @@
 'use strict';
 
-
 const Book = require('../models/book');
 
-const getBooks = async (req, res, next) => {
+const Handler = {};
+
+Handler.getBooks = async (req, res, next) => {
     try {
         const books = await Book.find({});
         res.status(200).send(books);
@@ -13,4 +14,26 @@ const getBooks = async (req, res, next) => {
     }
 };
 
-module.exports = getBooks;
+Handler.createBook = async (req, res, next) => {
+    try {
+        const book = await Book.create(req.body);
+        res.status(201).send(book);
+    } catch(err) {
+        err.customMessage = 'Something went wrong when adding your book: ';
+        console.error(err.customMessage + err);
+        next(err);
+    }
+};
+
+Handler.deleteBook = async (req, res, next) => {
+    try {
+        await Book.findByIdAndDelete(req.params.id);
+        res.status(200).send('Your book has been deleted');
+    } catch(err) {
+        err.customMessage = 'Something went wrong when deleting your book: ';
+        console.error(err.customMessage + err);
+        next(err);
+    }
+};
+
+module.exports = Handler;
