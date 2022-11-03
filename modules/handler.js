@@ -36,4 +36,15 @@ Handler.deleteBook = async (req, res, next) => {
     }
 };
 
+Handler.updateBook = async (req, res, next) => {
+    try {
+        const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).send(updatedBook);
+    } catch(err) {
+        err.customMessage = 'Something went wrong when updating your book: ';
+        console.error(err.customMessage + err);
+        next(err);
+    }
+}
+
 module.exports = Handler;
