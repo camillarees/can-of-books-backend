@@ -47,7 +47,7 @@ Handler.updateBook = async (req, res, next) => {
     }
 }
 
-function handleGetUser(req, res) {
+Handler.getUser = async (req, res) => {
     console.log('Getting the user');
     res.send(req.user);
   };
