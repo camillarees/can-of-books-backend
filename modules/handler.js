@@ -6,7 +6,7 @@ const Handler = {};
 
 Handler.getBooks = async (req, res, next) => {
     try {
-        const books = await Book.find({});
+        const books = await Book.find({ email: req.user.email });
         res.status(200).send(books);
     } catch(err) {
         console.error(err);
@@ -16,7 +16,7 @@ Handler.getBooks = async (req, res, next) => {
 
 Handler.createBook = async (req, res, next) => {
     try {
-        const book = await Book.create(req.body);
+        const book = await Book.create({ ...req.body, email: req.user.email});
         res.status(201).send(book);
     } catch(err) {
         err.customMessage = 'Something went wrong when adding your book: ';
@@ -27,7 +27,7 @@ Handler.createBook = async (req, res, next) => {
 
 Handler.deleteBook = async (req, res, next) => {
     try {
-        await Book.findByIdAndDelete(req.params.id);
+        await Book.findByIdAndDelete({ ...req.params.id, email: req.user.email });
         res.status(200).send('Your book has been deleted');
     } catch(err) {
         err.customMessage = 'Something went wrong when deleting your book: ';
@@ -38,7 +38,7 @@ Handler.deleteBook = async (req, res, next) => {
 
 Handler.updateBook = async (req, res, next) => {
     try {
-        const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, req.user.email, { new: true });
         res.status(200).send(updatedBook);
     } catch(err) {
         err.customMessage = 'Something went wrong when updating your book: ';
@@ -46,5 +46,10 @@ Handler.updateBook = async (req, res, next) => {
         next(err);
     }
 }
+
+function handleGetUser(req, res) {
+    console.log('Getting the user');
+    res.send(req.user);
+  };
 
 module.exports = Handler;
