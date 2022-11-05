@@ -27,8 +27,9 @@ Handler.createBook = async (req, res, next) => {
 
 Handler.deleteBook = async (req, res, next) => {
     try {
-        await Book.findByIdAndDelete({ ...req.params.id, email: req.user.email });
+        await Book.findByIdAndDelete(req.params._id);
         res.status(200).send('Your book has been deleted');
+        
     } catch(err) {
         err.customMessage = 'Something went wrong when deleting your book: ';
         console.error(err.customMessage + err);
@@ -38,7 +39,7 @@ Handler.deleteBook = async (req, res, next) => {
 
 Handler.updateBook = async (req, res, next) => {
     try {
-        const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, req.user.email, { new: true });
+        const updatedBook = await Book.findByIdAndUpdate(req.params.id, { ...req.body, email: req.user.email}, { new: true, overwrite: true});
         res.status(200).send(updatedBook);
     } catch(err) {
         err.customMessage = 'Something went wrong when updating your book: ';
